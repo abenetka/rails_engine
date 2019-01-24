@@ -35,7 +35,7 @@ RSpec.describe Merchant, type: :model do
 
     it 'calculates total revenue for x merchants' do
       expect(Merchant.most_revenue(3)[0]).to eq(@merchant_2)
-      # expect(Merchant.most_revenue(3).revenue.to_f).to eq(130)
+      expect(Merchant.most_revenue(3).to_a.count).to eq(3)
     end
   end
 
