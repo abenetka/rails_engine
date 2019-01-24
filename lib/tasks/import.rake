@@ -44,13 +44,13 @@ namespace :import do
   end
 
   desc "Imports ALL data from CSV"
-  task :all => :envirionment do
-    Rake::Task[:customers].invoke
-    Rake::Task[:merchants].invoke
-    Rake::Task[:invoices].invoke
-    Rake::Task[:items].invoke
-    Rake::Task[:invoice_items].invoke
-    Rake::Task[:transactions].invoke
+  task :all => :environment do
+    Rake::Task["import:customers"].invoke
+    Rake::Task["import:merchants"].invoke
+    Rake::Task["import:items"].invoke
+    Rake::Task["import:invoices"].invoke
+    Rake::Task["import:invoice_items"].invoke
+    Rake::Task["import:transactions"].invoke
   end
 
 end
