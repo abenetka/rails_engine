@@ -45,6 +45,28 @@ describe "Merchants API" do
     expect(response).to be_successful
     expect(merchant["data"]["attributes"]["name"]).to eq(merchant_name.to_s)
   end
+
+  it "can find a merchant by created at" do
+    date = "2012-03-27 14:54:09 UTC"
+    merchant = create(:merchant, created_at: date)
+
+    get "/api/v1/merchants/find?created_at=#{date}"
+    returned_merchant= JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned_merchant["data"]["id"]).to eq(merchant.id.to_s)
+  end
+
+  it "can find a merchant by updated at" do
+    date = "2012-03-29 02:54:10 UTC"
+    merchant = create(:merchant, updated_at: date)
+
+    get "/api/v1/merchants/find?updated_at=#{date}"
+    returned_merchant= JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned_merchant["data"]["id"]).to eq(merchant.id.to_s)
+  end
 end
 
 describe "Merchant stats" do
@@ -70,7 +92,7 @@ describe "Merchant stats" do
     @transaction_2 = create(:transaction, invoice: @invoice_2, result: 'success')
     @transaction_3 = create(:transaction, invoice: @invoice_3, result: 'success')
   end
-  
+
 
   it "returns the top x merchants ranked by total revenue" do
     quantity = 5
