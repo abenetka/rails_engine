@@ -54,5 +54,25 @@ describe "Customers API" do
     expect(customer["data"]["attributes"]["last_name"]).to eq(customer_last.to_s)
   end
 
+  it "can find a customer by created at" do
+    date = "2012-03-27 14:54:09 UTC"
+    customer = create(:customer, created_at: date)
 
+    get "/api/v1/customers/find?created_at=#{date}"
+    returned_customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned_customer["data"]["id"]).to eq(customer.id.to_s)
+  end
+
+  it "can find a customer by updated at" do
+    date = "2012-03-29 02:54:10 UTC"
+    customer = create(:customer, updated_at: date)
+
+    get "/api/v1/customers/find?updated_at=#{date}"
+    returned_customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned_customer["data"]["id"]).to eq(customer.id.to_s)
+  end
 end
