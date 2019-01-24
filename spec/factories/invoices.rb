@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :invoice do
-    status { "Shipped" }
+    status { "shipped" }
     merchant
     customer
   end
