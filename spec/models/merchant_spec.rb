@@ -52,5 +52,9 @@ RSpec.describe Merchant, type: :model do
       expect(Merchant.total_revenue_by_date(date)).to eq(2900)
     end
 
+    it 'calculates total revenue for a single merchant' do
+    # GET /api/v1/merchants/:id/revenue returns the total revenue for that merchant across successful transactions
+      expect(@merchant_1.total_revenue_for_merchant).to eq(2000)
+    end
   end
 end
