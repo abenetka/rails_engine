@@ -118,10 +118,26 @@ describe "Merchant stats" do
     date = "2012-03-27 14:54:09 UTC"
 
     get "/api/v1/merchants/revenue?date=#{date}"
-    binding.pry
+
+    merchant = JSON.parse(response.body)
+    expect(response).to be_successful
+  end
+  it "returns the top revenue for merchants by date x" do
+    date = "2012-03-27 14:54:09 UTC"
+
+    get "/api/v1/merchants/revenue?date=#{date}"
+
     merchant = JSON.parse(response.body)
     expect(response).to be_successful
   end
 
+  it "returns the total revenue for a particular merchant" do
+    merchant_id = @merchant_1.id
+
+    get "/api/v1/merchants/#{merchant_id}/revenue"
+
+    merchant = JSON.parse(response.body)
+    expect(response).to be_successful
+  end
 
 end
