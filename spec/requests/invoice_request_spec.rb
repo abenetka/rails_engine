@@ -65,4 +65,17 @@ describe "Invoices API" do
     expect(response).to be_successful
     expect(returned_invoice["data"]["id"]).to eq(invoice.id.to_s)
   end
+
+  it "can find all invoices by id" do
+    invoice_id_1 = create(:invoice).id
+    invoice_id_2 = create(:invoice).id
+    invoice_id_3 = create(:invoice).id
+
+    get "/api/v1/invoices/find_all?id=#{invoice_id_1}"
+
+    invoice = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(invoice["data"][0]["id"]).to eq(invoice_id_1.to_s)
+  end
+
 end
