@@ -14,4 +14,20 @@ class Merchant < ApplicationRecord
       .group(:id)
       .limit(quantity)
   end
+
+  def self.most_items(quantity)
+    joins(invoices: [:invoice_items, :transactions])
+    .select('merchants.*, sum(invoice_items.quantity) as most_items')
+    .where(transactions: {result: 0})
+    .order('most_items desc')
+    .group(:id)
+    .limit(quantity)
+  end
+
+  def self.total_revenue_by_date(date)
+    joins(invoices: [:invoice_items, :transactions])
+      .where(transactions: {result: 0, updated_at: date})
+      .sum('invoice_items.quantity * invoice_items.unit_price')
+  end
+
 end
