@@ -30,12 +30,38 @@ class Merchant < ApplicationRecord
       .sum('invoice_items.quantity * invoice_items.unit_price')
   end
 
-  # .where('merchant.id=?', self.id)
   def total_revenue_for_merchant
     Merchant.joins(invoices: [:invoice_items, :transactions])
     .where(transactions: {result: 0}, merchants: {id: self.id})
     .sum('invoice_items.quantity * invoice_items.unit_price')
   end
+
+  def single_merchant_revenue_by_date(date)
+    Merchant.joins(invoices: [:invoice_items, :transactions])
+    .where(transactions: {result: 0}, merchants: {id: self.id})
+    .where(invoices: {updated_at: date})
+    .sum('invoice_items.quantity * invoice_items.unit_price')
+  end
+
+  # def favorite_customer
+  #   Customer.successful_transactions.joins(merchants: [invoices: :transactions])
+  #   .where(transactions: {result: 0}, merchants: {id: self.id})
+  #   .group(:id)
+  #   .count(:id)
+  #
+  # end
+  # # def favorite_customer
+  # #   Customer.successful_transactions.joins(invoices: :transactions)
+  # #   .select('customers.first_name, count(transactions.id) as total_transactions')
+  # #   .group(:id)
+  # #   .order('total_transactions desc')
+  # #   .limit(1)
+  # # end
+  #
+  # def self.successful_transactions
+  #   Merchant.joins(invoices: [:invoice_items, :transactions])
+  #   .where(transactions: {result: 0}, merchants: {id: self.id})
+  # end
 
 
 end
