@@ -15,17 +15,21 @@ RSpec.describe Merchant, type: :model do
       @merchant_2 = create(:merchant)
       @merchant_3 = create(:merchant)
 
+      @customer_1 = create(:customer)
+      @customer_2 = create(:customer)
+      @customer_3 = create(:customer)
+
       @item_1 = create(:item, merchant: @merchant_1)
       @item_2 = create(:item, merchant: @merchant_2)
       @item_3 = create(:item, merchant: @merchant_3)
 
-      @invoice_1 = create(:invoice, merchant: @merchant_1)
+      @invoice_1 = create(:invoice, merchant: @merchant_1, customer: @customer_1, updated_at: '2012-03-27 14:54:09 UTC')
       @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 1, unit_price: 2000)
 
-      @invoice_2 = create(:invoice, merchant: @merchant_2)
+      @invoice_2 = create(:invoice, merchant: @merchant_2, customer: @customer_1,  updated_at: '2012-03-24 14:54:09 UTC')
       @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 3, unit_price: 300)
 
-      @invoice_3 = create(:invoice, merchant: @merchant_3)
+      @invoice_3 = create(:invoice, merchant: @merchant_3, customer: @customer_2,  updated_at: '2012-03-23 14:54:09 UTC')
       @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, quantity: 5, unit_price: 200)
 
       @transaction_1 = create(:transaction, invoice: @invoice_1, result: 'success', updated_at: '2012-03-27 14:54:09 UTC')
@@ -53,8 +57,19 @@ RSpec.describe Merchant, type: :model do
     end
 
     it 'calculates total revenue for a single merchant' do
-    # GET /api/v1/merchants/:id/revenue returns the total revenue for that merchant across successful transactions
       expect(@merchant_1.total_revenue_for_merchant).to eq(2000)
     end
+
+    it 'calculates total revenue for single merchant by date x' do
+      date = '2012-03-24 14:54:09 UTC'
+
+      expect(@merchant_2.single_merchant_revenue_by_date(date)).to eq(900)
+    end
+
+    xit 'calculates the total number of transactions for the favorite customer' do
+      expect(@merchant_1.favorite_customer).to eq(@customer_1)
+    end
+
+
   end
 end
