@@ -79,13 +79,13 @@ describe "Merchant stats" do
     @item_2 = create(:item, merchant: @merchant_2)
     @item_3 = create(:item, merchant: @merchant_3)
 
-    @invoice_1 = create(:invoice, merchant: @merchant_1)
+    @invoice_1 = create(:invoice, merchant: @merchant_1, updated_at: '2012-03-27 14:54:09 UTC')
     @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 1, unit_price: 2000)
 
-    @invoice_2 = create(:invoice, merchant: @merchant_2)
+    @invoice_2 = create(:invoice, merchant: @merchant_2, updated_at: '2012-03-24 14:54:09 UTC')
     @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 3, unit_price: 300)
 
-    @invoice_3 = create(:invoice, merchant: @merchant_3)
+    @invoice_3 = create(:invoice, merchant: @merchant_3, updated_at: '2012-03-23 14:54:09 UTC')
     @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, quantity: 5, unit_price: 200)
 
     @transaction_1 = create(:transaction, invoice: @invoice_1, result: 'success', updated_at: '2012-03-27 14:54:09 UTC')
@@ -127,16 +127,30 @@ describe "Merchant stats" do
 
     get "/api/v1/merchants/revenue?date=#{date}"
 
-    merchant = JSON.parse(response.body)
+    merchants = JSON.parse(response.body)
+
     expect(response).to be_successful
+    expect(merchants["data"]["revenue_by_date"]["all_merchants"]).to eq(2900)
   end
 
   it "returns the total revenue for a particular merchant" do
-    merchant_id = @merchant_1.id
+    merchant_id = @merchant_2.id
 
     get "/api/v1/merchants/#{merchant_id}/revenue"
 
     merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"]["revenue_for_merchant"]["merchant"]).to eq(900)
+  end
+
+  it "returns the total revenue for a particular merchant on specific invoice date" do
+    merchant_id = @merchant_1.id
+    date = "2012-03-24 14:54:09 UTC"
+
+    get "/api/v1/merchants/#{merchant_id}/revenue?date=#{date}"
+    merchant = JSON.parse(response.body)
+
     expect(response).to be_successful
   end
 
