@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :customer do
-    first_name { "MyText" }
-    last_name { "MyText" }
+    first_name { "Princess" }
+    last_name { "Wanda" }
   end
 end
