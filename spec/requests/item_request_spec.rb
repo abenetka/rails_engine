@@ -110,6 +110,7 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
+    expect(item["data"].count).to eq(2)
     expect(item["data"][0]["attributes"]["name"]).to eq(item_name_1.to_s)
     expect(item["data"][1]["attributes"]["name"]).to eq(item_name_3.to_s)
   end
@@ -124,6 +125,7 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
+    expect(item["data"].count).to eq(2)
     expect(item["data"][0]["attributes"]["description"]).to eq(item_description_1.to_s)
     expect(item["data"][1]["attributes"]["description"]).to eq(item_description_2.to_s)
   end
@@ -138,6 +140,7 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
+    expect(item["data"].count).to eq(2)
     expect(item["data"][0]["attributes"]["unit_price"]).to eq(item_unit_price_1)
     expect(item["data"][1]["attributes"]["unit_price"]).to eq(item_unit_price_3)
   end
