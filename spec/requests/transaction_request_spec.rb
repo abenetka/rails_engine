@@ -78,6 +78,97 @@ describe "Transactions API" do
     expect(response).to be_successful
     expect(returned_transaction["data"]["id"]).to eq(transaction.id.to_s)
   end
+
+  it "can find all transactions by id" do
+    transaction_id_1 = create(:transaction).id
+    transaction_id_2 = create(:transaction).id
+    transaction_id_3 = create(:transaction).id
+
+    get "/api/v1/transactions/find_all?id=#{transaction_id_1}"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transaction["data"].count).to eq(1)
+    expect(transaction["data"][0]["id"]).to eq(transaction_id_1.to_s)
+  end
+
+  it "can find all transactions by credit_card_number" do
+    transaction_credit_card_number_1 = create(:transaction, credit_card_number: "4654405418249632").credit_card_number
+    transaction_credit_card_number_2 = create(:transaction, credit_card_number: "4654405418249631").credit_card_number
+    transaction_credit_card_number_3 = create(:transaction, credit_card_number: "4654405418249632").credit_card_number
+
+    get "/api/v1/transactions/find_all?credit_card_number=#{transaction_credit_card_number_1}"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transaction["data"].count).to eq(2)
+    expect(transaction["data"][0]["attributes"]["credit_card_number"]).to eq(transaction_credit_card_number_1.to_s)
+    expect(transaction["data"][1]["attributes"]["credit_card_number"]).to eq(transaction_credit_card_number_3.to_s)
+  end
+
+  it "can find all transactions by credit_card_expiration_date" do
+    transaction_credit_card_expiration_date_1 = create(:transaction).credit_card_expiration_date
+    transaction_credit_card_expiration_date_2 = create(:transaction).credit_card_expiration_date
+    transaction_credit_card_expiration_date_3 = create(:transaction).credit_card_expiration_date
+
+    get "/api/v1/transactions/find_all?credit_card_expiration_date=#{transaction_credit_card_expiration_date_1}"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transaction["data"].count).to eq(3)
+    expect(transaction["data"][0]["attributes"]["credit_card_expiration_date"]).to eq(nil)
+    expect(transaction["data"][1]["attributes"]["credit_card_expiration_date"]).to eq(nil)
+    expect(transaction["data"][2]["attributes"]["credit_card_expiration_date"]).to eq(nil)
+  end
+
+  it "can find all transactions by result" do
+    transaction_result_1 = create(:transaction, result: "success").result
+    transaction_result_2 = create(:transaction, result: "success").result
+    transaction_result_3 = create(:transaction, result: "failed").result
+
+    get "/api/v1/transactions/find_all?result=#{transaction_result_2}"
+
+    transaction = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transaction["data"].count).to eq(2)
+    expect(transaction["data"][0]["attributes"]["result"]).to eq(transaction_result_1.to_s)
+    expect(transaction["data"][0]["attributes"]["result"]).to eq(transaction_result_2.to_s)
+  end
+
+  it "can find all transactions by created_at" do
+    date = "2012-03-29 02:54:10 UTC"
+    transaction_created_at_1 = create(:transaction, created_at: "2012-03-30 02:54:10 UTC")
+    transaction_created_at_2 = create(:transaction, created_at: "2012-03-29 02:54:10 UTC")
+    transaction_created_at_3 = create(:transaction, created_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/transactions/find_all?created_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(transaction_created_at_2.id.to_s)
+    expect(returned["data"][1]["id"]).to eq(transaction_created_at_3.id.to_s)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it "can find all transactions by updated_at" do
+    date = "2012-03-25 02:54:10 UTC"
+    transaction_updated_at_1 = create(:transaction, updated_at: "2012-03-25 02:54:10 UTC")
+    transaction_updated_at_2 = create(:transaction, updated_at: "2012-03-29 02:54:10 UTC")
+    transaction_updated_at_3 = create(:transaction, updated_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/transactions/find_all?updated_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(transaction_updated_at_1.id.to_s)
+    expect(returned["data"].count).to eq(1)
+  end
 end
 
 describe "Transaction relationship endpoints" do
