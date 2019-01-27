@@ -151,4 +151,32 @@ describe 'items stats' do
     expect(response).to be_successful
     expect(returned_item["data"]["best_day"][0..9]).to eq(invoice_date[0..9])
   end
+
+  it 'returns a collection of associated invoice items' do
+    item_id = @item_1.id
+    invoice_item_id_1 = @invoice_item_1.id
+    invoice_item_id_2 = @invoice_item_4.id
+
+    get "/api/v1/items/#{item_id}/invoice_items"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["type"]).to eq("invoice_item")
+    expect(returned["data"][0]["id"]).to eq(invoice_item_id_1.to_s)
+    expect(returned["data"][1]["id"]).to eq(invoice_item_id_2.to_s)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it 'returns the associated merchant' do
+    item_id = @item_1.id
+    merchant_id_1 = @merchant_1.id
+
+    get "/api/v1/items/#{item_id}/merchant"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("merchant")
+    expect(returned["data"]["id"]).to eq(merchant_id_1.to_s)
+  end
+
 end
