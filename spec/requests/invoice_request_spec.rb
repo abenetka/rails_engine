@@ -120,6 +120,20 @@ describe "Invoices API" do
     expect(returned["data"][0]["id"]).to eq(invoice_updated_at_1.id.to_s)
     expect(returned["data"].count).to eq(1)
   end
+
+  it "can return a random invoice" do
+    invoice_1 = create(:invoice)
+    invoice_2 = create(:invoice)
+    invoice_3 = create(:invoice)
+
+    get "/api/v1/invoices/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("invoice")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe "Invoice relationship endpoints" do

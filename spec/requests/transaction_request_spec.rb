@@ -169,6 +169,20 @@ describe "Transactions API" do
     expect(returned["data"][0]["id"]).to eq(transaction_updated_at_1.id.to_s)
     expect(returned["data"].count).to eq(1)
   end
+
+  it "can return a random transaction" do
+    transaction_1 = create(:transaction)
+    transaction_2 = create(:transaction)
+    transaction_3 = create(:transaction)
+
+    get "/api/v1/transactions/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("transaction")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe "Transaction relationship endpoints" do

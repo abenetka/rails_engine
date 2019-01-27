@@ -126,6 +126,20 @@ describe "Merchants API" do
     expect(returned["data"][0]["id"]).to eq(merchant_updated_at_1.id.to_s)
     expect(returned["data"].count).to eq(1)
   end
+
+  it "can return a random merchant" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    merchant_3 = create(:merchant)
+
+    get "/api/v1/merchants/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("merchant")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe "Merchant stats and relationship endpoints" do

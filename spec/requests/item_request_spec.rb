@@ -175,6 +175,20 @@ describe "Items API" do
     expect(returned["data"][0]["id"]).to eq(item_updated_at_1.id.to_s)
     expect(returned["data"].count).to eq(1)
   end
+
+  it "can return a random item" do
+    item_1 = create(:item)
+    item_2 = create(:item)
+    item_3 = create(:item)
+
+    get "/api/v1/items/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("item")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe 'items stats and relationship endpoints' do

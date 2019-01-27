@@ -148,6 +148,20 @@ describe "Customers API" do
     expect(returned["data"][0]["id"]).to eq(customer_updated_at_1.id.to_s)
     expect(returned["data"].count).to eq(1)
   end
+
+  it "can return a random customer" do
+    customer_1 = create(:customer)
+    customer_2 = create(:customer)
+    customer_3 = create(:customer)
+
+    get "/api/v1/customers/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("customer")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe 'customer stats' do
