@@ -69,7 +69,7 @@ describe "Merchants API" do
   end
 end
 
-describe "Merchant stats" do
+describe "Merchant stats and relationship endpoints" do
   before :each do
     @merchant_1 = create(:merchant, name: "Merchant 1")
     @merchant_2 = create(:merchant, name: "Merchant 2")
@@ -153,5 +153,33 @@ describe "Merchant stats" do
 
     expect(response).to be_successful
   end
+
+  it "returns a collection of items associated with that merchant" do
+    merchant_id = @merchant_1.id
+    item_id = @item_1.id
+
+    get "/api/v1/merchants/#{merchant_id}/items"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"][0]["attributes"]["name"]).to eq("item_1")
+    expect(merchant["data"][0]["id"]).to eq(item_id.to_s)
+    expect(merchant["data"][0]["attributes"]["merchant_id"]).to eq(merchant_id)
+  end
+
+  it "returns a collection of invoices associated with that merchant from their known orders" do
+    merchant_id = @merchant_1.id
+    invoice_id_1 = @invoice_1.id
+
+    get "/api/v1/merchants/#{merchant_id}/invoices"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"][0]["id"]).to eq(invoice_id_1.to_s)
+    expect(merchant.count).to eq(1)
+  end
+
 
 end
