@@ -75,6 +75,90 @@ describe "Invoice Items API" do
     expect(response).to be_successful
     expect(returned_invoice_item["data"]["id"]).to eq(invoice_item.id.to_s)
   end
+
+  it "can find all invoice_items by id" do
+    invoice_item_id_1 = create(:invoice_item).id
+    invoice_item_id_2 = create(:invoice_item).id
+    invoice_item_id_3 = create(:invoice_item).id
+
+    get "/api/v1/invoice_items/find_all?id=#{invoice_item_id_1}"
+
+    returned = JSON.parse(response.body)
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(invoice_item_id_1.to_s)
+  end
+
+  it "can find all invoice_item_items by quantity" do
+    invoice_item_quantity_1 = create(:invoice_item, quantity: 4).quantity
+    invoice_item_quantity_2 = create(:invoice_item, quantity: 4).quantity
+    invoice_item_quantity_3 = create(:invoice_item, quantity: 1).quantity
+
+    get "/api/v1/invoice_items/find_all?quantity=#{invoice_item_quantity_1}"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["attributes"]["quantity"]).to eq(invoice_item_quantity_1)
+    expect(returned["data"][1]["attributes"]["quantity"]).to eq(invoice_item_quantity_2)
+  end
+
+  it "can find all invoice_item_items by unit_price" do
+    invoice_item_unit_price_1 = create(:invoice_item, unit_price: 2).unit_price
+    invoice_item_unit_price_2 = create(:invoice_item, unit_price: 2).unit_price
+    invoice_item_unit_price_3 = create(:invoice_item, unit_price: 5).unit_price
+
+    get "/api/v1/invoice_items/find_all?unit_price=#{invoice_item_unit_price_1}"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["attributes"]["unit_price"]).to eq(invoice_item_unit_price_1)
+    expect(returned["data"][1]["attributes"]["unit_price"]).to eq(invoice_item_unit_price_2)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it "can find all invoice_item_items by created_at" do
+    date = "2012-03-29 02:54:10 UTC"
+    invoice_item_created_at_1 = create(:invoice_item, created_at: "2012-03-30 02:54:10 UTC")
+    invoice_item_created_at_2 = create(:invoice_item, created_at: "2012-03-29 02:54:10 UTC")
+    invoice_item_created_at_3 = create(:invoice_item, created_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/invoice_items/find_all?created_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(invoice_item_created_at_2.id.to_s)
+    expect(returned["data"][1]["id"]).to eq(invoice_item_created_at_3.id.to_s)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it "can find all invoice_item by updated_at" do
+    date = "2012-03-25 02:54:10 UTC"
+    invoice_item_updated_at_1 = create(:invoice_item, updated_at: "2012-03-25 02:54:10 UTC")
+    invoice_item_updated_at_2 = create(:invoice_item, updated_at: "2012-03-29 02:54:10 UTC")
+    invoice_item_updated_at_3 = create(:invoice_item, updated_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/invoice_items/find_all?updated_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(invoice_item_updated_at_1.id.to_s)
+    expect(returned["data"].count).to eq(1)
+  end
+
+  it "can return a random invoice_item" do
+    invoice_item_1 = create(:invoice_item)
+    invoice_item_2 = create(:invoice_item)
+    invoice_item_3 = create(:invoice_item)
+
+    get "/api/v1/invoice_items/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("invoice_item")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe "Invoice Item relationship endpoints" do

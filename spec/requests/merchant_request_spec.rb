@@ -67,6 +67,79 @@ describe "Merchants API" do
     expect(response).to be_successful
     expect(returned_merchant["data"]["id"]).to eq(merchant.id.to_s)
   end
+
+  it "can find all merchants by id" do
+    merchant_id_1 = create(:merchant).id
+    merchant_id_2 = create(:merchant).id
+    merchant_id_3 = create(:merchant).id
+
+    get "/api/v1/merchants/find_all?id=#{merchant_id_1}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"][0]["id"]).to eq(merchant_id_1.to_s)
+  end
+
+  it "can find all merchants by name" do
+    merchant_name_1 = create(:merchant, name: "Merchant 1").name
+    merchant_name_2 = create(:merchant, name: "Merchant 2").name
+    merchant_name_3 = create(:merchant, name: "Merchant 1").name
+
+    get "/api/v1/merchants/find_all?name=#{merchant_name_1}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["data"].count).to eq(2)
+    expect(merchant["data"][0]["attributes"]["name"]).to eq(merchant_name_1.to_s)
+    expect(merchant["data"][1]["attributes"]["name"]).to eq(merchant_name_3.to_s)
+  end
+
+  it "can find all merchants by created_at" do
+    date = "2012-03-29 02:54:10 UTC"
+    merchant_created_at_1 = create(:merchant, created_at: "2012-03-30 02:54:10 UTC")
+    merchant_created_at_2 = create(:merchant, created_at: "2012-03-29 02:54:10 UTC")
+    merchant_created_at_3 = create(:merchant, created_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/merchants/find_all?created_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(merchant_created_at_2.id.to_s)
+    expect(returned["data"][1]["id"]).to eq(merchant_created_at_3.id.to_s)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it "can find all merchants by updated_at" do
+    date = "2012-03-25 02:54:10 UTC"
+    merchant_updated_at_1 = create(:merchant, updated_at: "2012-03-25 02:54:10 UTC")
+    merchant_updated_at_2 = create(:merchant, updated_at: "2012-03-29 02:54:10 UTC")
+    merchant_updated_at_3 = create(:merchant, updated_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/merchants/find_all?updated_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(merchant_updated_at_1.id.to_s)
+    expect(returned["data"].count).to eq(1)
+  end
+
+  it "can return a random merchant" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    merchant_3 = create(:merchant)
+
+    get "/api/v1/merchants/random"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("merchant")
+    expect(returned.count).to eq(1)
+  end
 end
 
 describe "Merchant stats and relationship endpoints" do

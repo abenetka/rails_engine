@@ -3,13 +3,16 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :customers do
         get '/find', to: 'search#show'
+        get '/find_all', to: 'search#index'
         get '/:id/favorite_merchant', to: 'fav_merchant#show'
         get '/:id/invoices', to: 'invoices#index'
         get '/:id/transactions', to: 'transactions#index'
+        get '/random', to: 'random#show'
       end
 
       namespace :merchants do
         get '/find', to: 'search#show'
+        get '/find_all', to: 'search#index'
         get '/most_revenue', to: 'most_revenue#index'
         get '/most_items', to: 'most_items#index'
         get '/revenue', to: 'revenue#index'
@@ -17,11 +20,14 @@ Rails.application.routes.draw do
         get '/:id/revenue', to: 'revenue#show'
         get '/:id/invoices', to: 'invoices#index'
         get '/:id/items', to: 'items#index'
+        get '/random', to: 'random#show'
       end
 
       namespace :transactions do
         get '/find', to: 'search#show'
+        get '/find_all', to: 'search#index'
         get '/:id/invoice', to: 'invoice#index'
+        get '/random', to: 'random#show'
       end
 
       namespace :invoice_items do
@@ -29,6 +35,7 @@ Rails.application.routes.draw do
         get '/find_all', to: 'search#index'
         get '/:id/invoice', to: 'invoice#index'
         get '/:id/item', to: 'item#index'
+        get '/random', to: 'random#show'
       end
 
       namespace :invoices do
@@ -39,15 +46,18 @@ Rails.application.routes.draw do
         get '/:id/invoice_items', to: 'invoice_items#index'
         get '/:id/customer', to: 'customer#index'
         get '/:id/merchant', to: 'merchant#index'
+        get '/random', to: 'random#show'
       end
 
       namespace :items do
         get '/find', to: 'search#show'
+        get '/find_all', to: 'search#index'
         get '/most_revenue', to: 'most_revenue#index'
         get '/most_items', to: 'most_items#index'
         get '/:id/best_day', to: 'best_day#show'
         get '/:id/invoice_items', to: 'invoice_items#index'
         get '/:id/merchant', to: 'merchant#index'
+        get '/random', to: 'random#show'
       end
 
       resources :merchants, only: [:index, :show]
