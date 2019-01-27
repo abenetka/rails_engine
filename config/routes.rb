@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :customers do
         get '/find', to: 'search#show'
+        get '/:id/favorite_merchant', to: 'fav_merchant#show'
       end
 
       namespace :merchants do
@@ -30,6 +31,9 @@ Rails.application.routes.draw do
 
       namespace :items do
         get '/find', to: 'search#show'
+        get '/most_revenue', to: 'most_revenue#index'
+        get '/most_items', to: 'most_items#index'
+        get '/:id/best_day', to: 'best_day#show'
       end
 
       resources :customers, only: [:index, :show]
