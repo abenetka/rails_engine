@@ -89,6 +89,37 @@ describe "Invoices API" do
     expect(response).to be_successful
     expect(returned["data"][0]["attributes"]["status"]).to eq(invoice_status_1.to_s)
   end
+
+  it "can find all invoices by created_at" do
+    date = "2012-03-29 02:54:10 UTC"
+    invoice_created_at_1 = create(:invoice, created_at: "2012-03-30 02:54:10 UTC")
+    invoice_created_at_2 = create(:invoice, created_at: "2012-03-29 02:54:10 UTC")
+    invoice_created_at_3 = create(:invoice, created_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/invoices/find_all?created_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(invoice_created_at_2.id.to_s)
+    expect(returned["data"][1]["id"]).to eq(invoice_created_at_3.id.to_s)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it "can find all invoices by updated_at" do
+    date = "2012-03-25 02:54:10 UTC"
+    invoice_updated_at_1 = create(:invoice, updated_at: "2012-03-25 02:54:10 UTC")
+    invoice_updated_at_2 = create(:invoice, updated_at: "2012-03-29 02:54:10 UTC")
+    invoice_updated_at_3 = create(:invoice, updated_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/invoices/find_all?updated_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(invoice_updated_at_1.id.to_s)
+    expect(returned["data"].count).to eq(1)
+  end
 end
 
 describe "Invoice relationship endpoints" do
