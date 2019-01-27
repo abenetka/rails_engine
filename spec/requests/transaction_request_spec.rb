@@ -74,8 +74,45 @@ describe "Transactions API" do
 
     get "/api/v1/transactions/find?updated_at=#{date}"
     returned_transaction = JSON.parse(response.body)
-    
+
     expect(response).to be_successful
     expect(returned_transaction["data"]["id"]).to eq(transaction.id.to_s)
+  end
+end
+
+describe "Transaction relationship endpoints" do
+  before :each do
+    @merchant_1 = create(:merchant, name: "Merchant 1")
+    @merchant_2 = create(:merchant, name: "Merchant 2")
+    @merchant_3 = create(:merchant, name: "Merchant 3")
+
+    @item_1 = create(:item, merchant: @merchant_1)
+    @item_2 = create(:item, merchant: @merchant_2)
+    @item_3 = create(:item, merchant: @merchant_3)
+
+    @invoice_1 = create(:invoice, merchant: @merchant_1, updated_at: '2012-03-27 14:54:09 UTC')
+    @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 1, unit_price: 2000)
+
+    @invoice_2 = create(:invoice, merchant: @merchant_2, updated_at: '2012-03-24 14:54:09 UTC')
+    @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 3, unit_price: 300)
+
+    @invoice_3 = create(:invoice, merchant: @merchant_3, updated_at: '2012-03-23 14:54:09 UTC')
+    @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, quantity: 5, unit_price: 200)
+
+    @transaction_1 = create(:transaction, invoice: @invoice_1, result: 'success', updated_at: '2012-03-27 14:54:09 UTC')
+    @transaction_2 = create(:transaction, invoice: @invoice_2, result: 'success', updated_at: '2012-03-27 14:54:09 UTC')
+    @transaction_3 = create(:transaction, invoice: @invoice_3, result: 'success', updated_at: '2012-03-26 14:54:09 UTC')
+  end
+
+  it 'returns the associated invoice' do
+    transaction_id = @transaction_1.id
+    invoice_id_1 = @invoice_1.id
+
+    get "/api/v1/transactions/#{transaction_id}/invoice"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"]["type"]).to eq("invoice")
+    expect(returned["data"]["id"]).to eq(invoice_id_1.to_s)
   end
 end

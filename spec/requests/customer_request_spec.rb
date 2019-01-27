@@ -128,4 +128,41 @@ describe 'customer stats' do
     expect(returned_customer["data"]["favorite_merchant"][0]["id"]).to eq(merchant_id)
   end
 
+  it 'returns a collection of associated invoices' do
+    customer_id = @customer_1.id
+    invoice_id_1 = @invoice_1.id
+    invoice_id_2 = @invoice_2.id
+    invoice_id_3 = @invoice_3.id
+
+    get "/api/v1/customers/#{customer_id}/invoices"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["type"]).to eq("invoice")
+    expect(returned["data"][0]["id"]).to eq(invoice_id_1.to_s)
+    expect(returned["data"][1]["id"]).to eq(invoice_id_2.to_s)
+    expect(returned["data"][2]["id"]).to eq(invoice_id_3.to_s)
+    expect(returned["data"].count).to eq(3)
+  end
+
+  it 'returns a collection of associated transactions' do
+    customer_id = @customer_1.id
+    transaction_id_1 = @transaction_1.id
+    transaction_id_2 = @transaction_2.id
+    transaction_id_3 = @transaction_3.id
+
+    get "/api/v1/customers/#{customer_id}/transactions"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["type"]).to eq("transaction")
+    expect(returned["data"][0]["id"]).to eq(transaction_id_1.to_s)
+    expect(returned["data"][1]["id"]).to eq(transaction_id_2.to_s)
+    expect(returned["data"][2]["id"]).to eq(transaction_id_3.to_s)
+    expect(returned["data"].count).to eq(3)
+  end
+
+# GET /api/v1/customers/:id/transactions returns a collection of associated transactions
+
+
 end

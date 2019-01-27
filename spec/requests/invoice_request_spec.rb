@@ -77,5 +77,93 @@ describe "Invoices API" do
     expect(response).to be_successful
     expect(invoice["data"][0]["id"]).to eq(invoice_id_1.to_s)
   end
+end
+
+describe "Invoice relationship endpoints" do
+  before :each do
+    @merchant_1 = create(:merchant, name: "Merchant 1")
+    @customer_1 = create(:customer)
+    @customer_2 = create(:customer)
+
+    @item_1 = create(:item, merchant: @merchant_1)
+    @item_2 = create(:item, merchant: @merchant_1)
+    @item_3 = create(:item, merchant: @merchant_1)
+
+    @invoice_1 = create(:invoice, merchant: @merchant_1, customer: @customer_1, updated_at: '2012-03-27 14:54:09 UTC')
+    @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 1, unit_price: 2000)
+    @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_1, quantity: 3, unit_price: 300)
+
+    @invoice_2 = create(:invoice, merchant: @merchant_1, customer: @customer_2, updated_at: '2012-03-24 14:54:09 UTC')
+    @invoice_item_3 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 3, unit_price: 300)
+
+    @transaction_1 = create(:transaction, invoice: @invoice_1, result: 'success', updated_at: '2012-03-27 14:54:09 UTC')
+    @transaction_2 = create(:transaction, invoice: @invoice_1, result: 'failed', updated_at: '2012-03-27 14:54:09 UTC')
+    @transaction_3 = create(:transaction, invoice: @invoice_2, result: 'failed', updated_at: '2012-03-26 14:54:09 UTC')
+  end
+
+  it 'returns a collection of associated transactions' do
+    invoice_id = @invoice_1.id
+    transaction_id_1 = @transaction_1.id
+    transaction_id_2 = @transaction_2.id
+
+    get "/api/v1/invoices/#{invoice_id}/transactions"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["type"]).to eq("transaction")
+    expect(returned["data"].count).to eq(2)
+    expect(returned["data"][0]["id"]).to eq(transaction_id_1.to_s)
+    expect(returned["data"][1]["id"]).to eq(transaction_id_2.to_s)
+  end
+
+  it 'returns a collection of associated invoice_items' do
+    invoice_id = @invoice_1.id
+    invoice_item_id_1 = @invoice_item_1.id
+    invoice_item_id_2 = @invoice_item_2.id
+
+    get "/api/v1/invoices/#{invoice_id}/invoice_items"
+    returned = JSON.parse(response.body)
+
+    expect(returned["data"][0]["type"]).to eq("invoice_item")
+    expect(returned["data"].count).to eq(2)
+    expect(returned["data"][0]["id"]).to eq(invoice_item_id_1.to_s)
+    expect(returned["data"][1]["id"]).to eq(invoice_item_id_2.to_s)
+  end
+
+  it 'returns a collection of associated items' do
+    invoice_id = @invoice_1.id
+    item_id_1 = @item_1.id
+    item_id_2 = @item_2.id
+
+    get "/api/v1/invoices/#{invoice_id}/items"
+    returned = JSON.parse(response.body)
+
+    expect(returned["data"][0]["type"]).to eq("item")
+    expect(returned["data"].count).to eq(2)
+    expect(returned["data"][0]["id"]).to eq(item_id_1.to_s)
+    expect(returned["data"][1]["id"]).to eq(item_id_2.to_s)
+  end
+
+  it 'returns a collection of associated customer' do
+    invoice_id = @invoice_1.id
+    customer_id = @customer_1.id
+
+    get "/api/v1/invoices/#{invoice_id}/customer"
+    returned = JSON.parse(response.body)
+
+    expect(returned["data"]["type"]).to eq("customer")
+    expect(returned["data"]["id"]).to eq(customer_id.to_s)
+  end
+
+  it 'returns a collection of associated customer' do
+    invoice_id = @invoice_1.id
+    merchant_id = @merchant_1.id
+
+    get "/api/v1/invoices/#{invoice_id}/merchant"
+    returned = JSON.parse(response.body)
+
+    expect(returned["data"]["type"]).to eq("merchant")
+    expect(returned["data"]["id"]).to eq(merchant_id.to_s)
+  end
 
 end
