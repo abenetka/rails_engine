@@ -73,9 +73,21 @@ describe "Invoices API" do
 
     get "/api/v1/invoices/find_all?id=#{invoice_id_1}"
 
-    invoice = JSON.parse(response.body)
+    returned = JSON.parse(response.body)
     expect(response).to be_successful
-    expect(invoice["data"][0]["id"]).to eq(invoice_id_1.to_s)
+    expect(returned["data"][0]["id"]).to eq(invoice_id_1.to_s)
+  end
+
+  it "can find all invoices by status" do
+    invoice_status_1 = create(:invoice).status
+    invoice_status_2 = create(:invoice).status
+    invoice_status_3 = create(:invoice).status
+
+    get "/api/v1/invoices/find_all?status=#{invoice_status_1}"
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["attributes"]["status"]).to eq(invoice_status_1.to_s)
   end
 end
 
