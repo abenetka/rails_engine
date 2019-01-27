@@ -75,6 +75,79 @@ describe "Customers API" do
     expect(response).to be_successful
     expect(returned_customer["data"]["id"]).to eq(customer.id.to_s)
   end
+
+  it "can find all customers by id" do
+    customer_id_1 = create(:customer).id
+    customer_id_2 = create(:customer).id
+    customer_id_3 = create(:customer).id
+
+    get "/api/v1/customers/find_all?id=#{customer_id_1}"
+
+    customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(customer["data"].count).to eq(1)
+    expect(customer["data"][0]["id"]).to eq(customer_id_1.to_s)
+  end
+
+  it "can find all customers by first_name" do
+    customer_first_name_1 = create(:customer, first_name: "Wanda").first_name
+    customer_first_name_2 = create(:customer, first_name: "Wanda").first_name
+    customer_first_name_3 = create(:customer, first_name: "Ali").first_name
+
+    get "/api/v1/customers/find_all?first_name=#{customer_first_name_1}"
+
+    customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(customer["data"].count).to eq(2)
+    expect(customer["data"][0]["attributes"]["first_name"]).to eq(customer_first_name_1.to_s)
+    expect(customer["data"][1]["attributes"]["first_name"]).to eq(customer_first_name_2.to_s)
+  end
+  it "can find all customers by last_name" do
+    customer_last_name_1 = create(:customer, last_name: "Fay").last_name
+    customer_last_name_2 = create(:customer, last_name: "Benetka").last_name
+    customer_last_name_3 = create(:customer, last_name: "Fay").last_name
+
+    get "/api/v1/customers/find_all?last_name=#{customer_last_name_2}"
+
+    customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(customer["data"].count).to eq(1)
+    expect(customer["data"][0]["attributes"]["last_name"]).to eq(customer_last_name_2.to_s)
+  end
+
+  it "can find all customers by created_at" do
+    date = "2012-03-29 02:54:10 UTC"
+    customer_created_at_1 = create(:customer, created_at: "2012-03-30 02:54:10 UTC")
+    customer_created_at_2 = create(:customer, created_at: "2012-03-29 02:54:10 UTC")
+    customer_created_at_3 = create(:customer, created_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/customers/find_all?created_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(customer_created_at_2.id.to_s)
+    expect(returned["data"][1]["id"]).to eq(customer_created_at_3.id.to_s)
+    expect(returned["data"].count).to eq(2)
+  end
+
+  it "can find all customers by updated_at" do
+    date = "2012-03-25 02:54:10 UTC"
+    customer_updated_at_1 = create(:customer, updated_at: "2012-03-25 02:54:10 UTC")
+    customer_updated_at_2 = create(:customer, updated_at: "2012-03-29 02:54:10 UTC")
+    customer_updated_at_3 = create(:customer, updated_at: "2012-03-29 02:54:10 UTC")
+
+    get "/api/v1/customers/find_all?updated_at=#{date}"
+
+    returned = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(returned["data"][0]["id"]).to eq(customer_updated_at_1.id.to_s)
+    expect(returned["data"].count).to eq(1)
+  end
 end
 
 describe 'customer stats' do
