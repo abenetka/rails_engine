@@ -66,8 +66,8 @@ RSpec.describe Merchant, type: :model do
       expect(@merchant_2.single_merchant_revenue_by_date(date)).to eq(900)
     end
 
-    xit 'calculates the total number of transactions for the favorite customer' do
-      expect(@merchant_1.favorite_customer).to eq(@customer_1)
+    it 'calculates the total number of transactions for the favorite customer' do
+      expect(@merchant_1.favorite_customer.first).to eq(@customer_1)
     end
 
 
