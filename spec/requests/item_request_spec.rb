@@ -62,7 +62,7 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["data"]["attributes"]["unit_price"]).to eq(item_unit_price)
+    expect(item["data"]["attributes"]["unit_price"]).to eq(item_unit_price.to_f.to_s)
   end
 
   it "can find a item by created at" do
@@ -141,8 +141,8 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(item["data"].count).to eq(2)
-    expect(item["data"][0]["attributes"]["unit_price"]).to eq(item_unit_price_1)
-    expect(item["data"][1]["attributes"]["unit_price"]).to eq(item_unit_price_3)
+    expect(item["data"][0]["attributes"]["unit_price"]).to eq(item_unit_price_1.to_f.to_s)
+    expect(item["data"][1]["attributes"]["unit_price"]).to eq(item_unit_price_3.to_f.to_s)
   end
 
   it "can find all items by created_at" do

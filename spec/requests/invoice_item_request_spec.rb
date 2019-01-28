@@ -51,7 +51,7 @@ describe "Invoice Items API" do
     invoice_item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice_item["data"]["attributes"]["unit_price"]).to eq(invoice_item_unit_price)
+    expect(invoice_item["data"]["attributes"]["unit_price"]).to eq(invoice_item_unit_price.to_f.to_s)
   end
 
   it "can find a invoice_item by created at" do
@@ -110,8 +110,8 @@ describe "Invoice Items API" do
     returned = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(returned["data"][0]["attributes"]["unit_price"]).to eq(invoice_item_unit_price_1)
-    expect(returned["data"][1]["attributes"]["unit_price"]).to eq(invoice_item_unit_price_2)
+    expect(returned["data"][0]["attributes"]["unit_price"]).to eq(invoice_item_unit_price_1.to_f.to_s)
+    expect(returned["data"][1]["attributes"]["unit_price"]).to eq(invoice_item_unit_price_2.to_f.to_s)
     expect(returned["data"].count).to eq(2)
   end
 
