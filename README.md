@@ -13,6 +13,10 @@ Rails Engine is a project for backend students at [Turing School of Software & D
 
 http://backend.turing.io/module3/projects/rails_engine
 
+### Rails Engine Spec Harness:
+
+https://github.com/turingschool/rales_engine_spec_harness
+
 ### Rails Engine - Database Schema:
 
 ![Image description](https://cdn1.imggmi.com/uploads/2019/1/28/2587b40f9a834117264784af76e3f8b4-full.png)
