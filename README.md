@@ -15,7 +15,7 @@ http://backend.turing.io/module3/projects/rails_engine#evaluation
 
 ### Rails Engine - Database Schema:
 
-![Image description](https://i.imgur.com/uFMsE5k.png)
+![Image description](https://imggmi.com/full/2019/1/28/2587b40f9a834117264784af76e3f8b4-full.png.html)
 
 
 ## Getting Started
