@@ -1,24 +1,92 @@
-# README
+# Rails Engine
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
 
-* Ruby version
+Welcome to our Little Shop of Dog Costumes!  We hope you enjoy our app!
 
-* System dependencies
+Rails Engine is a project for backend students at [Turing School of Software & Design](https://turing.io/) during their first week of Module 3 where we're learning to build Professional Rails Applications.  The learning goals for the project were:
+- Learn how to to build Single-Responsibility controllers to provide a well-designed and versioned API.
+- Learn how to use controller tests to drive your design.
+- Use Ruby and ActiveRecord to perform more complicated business intelligence.
 
-* Configuration
+### Rails Engine Project Spec:
 
-* Database creation
+http://backend.turing.io/module3/projects/rails_engine#evaluation
 
-* Database initialization
+### Rails Engine - Database Schema:
 
-* How to run the test suite
+![Image description](https://i.imgur.com/uFMsE5k.png)
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+## Getting Started
 
-* ...
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+#### Prerequisites:
+
+* Install Ruby (Version 2.4.5)
+* Install Rails (Version 5.1)
+
+
+
+#### Installing:
+
+To run this application locally, clone this [repo](https://github.com/abenetka/rails_engine) and follow the steps below:
+
+1) Install gems:
+```
+$ bundle
+```
+
+
+2) Create, migrate, & seed database:
+```
+$ rake db:{create,migrate,seed}
+```
+
+
+3) Import CSV data
+```
+$ rake import:all
+
+```
+or individually
+```
+$ rake import:<table name>
+```
+
+4) Run Rails Server
+```
+$ rails s
+```
+
+5) Open browser and navigate to:
+
+```
+localhost:3000
+```
+
+
+## Running the RSpec Test Suite
+
+Rails Engine has a full RSpec suite of feature and model tests for every piece of functionality in the app.
+
+#### Running the Full Test Suite:
+
+From the root of the rails_enginer directory, type the below command to run the full test suite:
+
+```
+$ rspec
+```
+
+## Built With
+
+* [Ruby - Version 2.4.5](https://ruby-doc.org/core-2.4.5/) - Base code language
+* [Rails - Version 5.1](https://guides.rubyonrails.org/v5.1/) - Web framework used
+* [RSpec](http://rspec.info/documentation/) - Testing Suite
+
+
+## Authors
+
+* **Ali Benetka** - [Ali's Github](https://github.com/abenetka)
+
