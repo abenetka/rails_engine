@@ -191,19 +191,9 @@ describe "Merchant stats and relationship endpoints" do
     date = "2012-03-27 14:54:09 UTC"
 
     get "/api/v1/merchants/revenue?date=#{date}"
-
     merchant = JSON.parse(response.body)
-    expect(response).to be_successful
-  end
-  it "returns the top revenue for merchants by date x" do
-    date = "2012-03-27 14:54:09 UTC"
-
-    get "/api/v1/merchants/revenue?date=#{date}"
-
-    merchants = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchants["data"]["revenue_by_date"]["all_merchants"]).to eq(2900)
   end
 
   it "returns the total revenue for a particular merchant" do
@@ -214,7 +204,7 @@ describe "Merchant stats and relationship endpoints" do
     merchant = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchant["data"]["revenue_for_merchant"]["merchant"]).to eq(900)
+    expect(merchant["data"]["revenue"]).to eq(900.to_f.to_s)
   end
 
   it "returns the total revenue for a particular merchant on specific invoice date" do
