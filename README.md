@@ -2,8 +2,6 @@
 
 
 
-Welcome to our Little Shop of Dog Costumes!  We hope you enjoy our app!
-
 Rails Engine is a project for backend students at [Turing School of Software & Design](https://turing.io/) during their first week of Module 3 where we're learning to build Professional Rails Applications.  The learning goals for the project were:
 - Learn how to to build Single-Responsibility controllers to provide a well-designed and versioned API.
 - Learn how to use controller tests to drive your design.
